@@ -6,34 +6,40 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+// Crie uma model coloque todos os atributos necessários + get seters+ anotações
 
-@Entity
-@Table(name = "postagem")
+@Entity  //indica que a classe é uma entidade do JPA 
+@Table(name = "postagem")   // entidade que vai virar uma tabela no banco de dados
 
 public class Postagem {
 	
 	@Id
-	@GeneratedValue (strategy = GenerationType.IDENTITY)
+	@GeneratedValue (strategy = GenerationType.IDENTITY) //no banco de dados esse atributo se torna uma chave primaria
 	private long id;
 	
-	@NotNull
+	@NotBlank
 	@Size (min = 5, max = 100)
 	private String titulo;
 	
-	@NotNull
-	@Size (min = 5, max = 100)
+	@NotBlank
+	@Size (min = 10, max = 100)
 	private String texto;
 	
 	@Temporal (TemporalType.TIMESTAMP)
 	private Date data = new java.sql.Date(System.currentTimeMillis());
 	
+	@ManyToOne
+	@JsonIgnoreProperties ("postagem")
+	private Tema tema; 
 	
 	public long getId() {
 		return id;
@@ -58,6 +64,12 @@ public class Postagem {
 	}
 	public void setData(Date data) {
 		this.data = data;
+	}
+	public Tema getTema() {
+		return tema;
+	}
+	public void setTema(Tema tema) {
+		this.tema = tema;
 	}
 
 	
