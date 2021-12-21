@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -20,12 +21,13 @@ public class Usuario {
 	
 	
 	 
-	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
+	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) long id;
 	
 	@NotBlank
 	@Size (min = 2, max=100)
 	private String nome; 
 	
+	@Email
 	@NotBlank
 	@Size (min = 5, max=100)
 	private String usuario;
@@ -34,12 +36,13 @@ public class Usuario {
 	@Size (min = 5, max=100)
 	private String senha;
 	
+	
 	@OneToMany (mappedBy = "usuario", cascade = CascadeType.ALL)
 	@JsonIgnoreProperties ("usuario")
 	private List <Postagem> postagem;
 	
 	
-	public Usuario(Long id,  String nome, String usuario, String senha) {
+	public Usuario(long id,  String nome, String usuario, String senha) {
 		this.id = id;
 		this.nome = nome;
 		this.usuario = usuario;
@@ -54,7 +57,7 @@ public class Usuario {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
