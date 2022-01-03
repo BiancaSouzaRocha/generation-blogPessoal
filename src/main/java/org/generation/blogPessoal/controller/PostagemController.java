@@ -1,8 +1,11 @@
 package org.generation.blogPessoal.controller;
 
-// classe responsável pela comunicação com o cliente (postiman)
+
 
 import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.generation.blogPessoal.model.Postagem;
 import org.generation.blogPessoal.repository.PostagemRepository;
@@ -17,20 +20,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/postagens")
-@CrossOrigin("*") //classe aceita requisição de qualquer origem
+@CrossOrigin(origins = "*", allowedHeaders = "*") 
 public class PostagemController{
 	
-	@Autowired //todos os serviços serão acessados a partir do controller
+	@Autowired 
 	private PostagemRepository repository;
 	
 	@GetMapping
 	public ResponseEntity <List <Postagem>> GetAll () {
 		return ResponseEntity.ok(repository.findAll());  
-		// ResponseEntity deve representar a resposta HTTP inteira
+		
 	}
 	
 	@GetMapping ("/{id}")
@@ -39,7 +44,7 @@ public class PostagemController{
 				.map (resp -> ResponseEntity.ok (resp))
 				.orElse(ResponseEntity.notFound().build());
 		
-		// PathVariable é utilizado quando o valor da variável é passada diretamente na URL
+		
 	}
 	
 	@GetMapping ("/titulo/{titulo}")
@@ -48,20 +53,26 @@ public class PostagemController{
 	}
 	
 	@PostMapping 
-	public ResponseEntity <Postagem> post (@RequestBody Postagem postagem) {
+	public ResponseEntity <Postagem> post (@Valid @RequestBody Postagem postagem) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(postagem));
 		
 	}
 	
 	@PutMapping
-	public ResponseEntity <Postagem> put (@RequestBody Postagem postagem) {
+	public ResponseEntity <Postagem> put (@Valid @RequestBody Postagem postagem) {
 		return ResponseEntity.status(HttpStatus.OK).body(repository.save(postagem));
 		
 	}
 	
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{id}")
 	public void delete (@PathVariable long id) {
-		repository.deleteById (id);
+		Optional<Postagem> post = repository.findById(id);
+
+		if(post.isEmpty())
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+
+		repository.deleteById(id);
 	}
 	
 	

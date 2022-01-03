@@ -16,28 +16,28 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity 
-@Table (name = "tb_usuario") //renomeia a tabela
+@Table (name = "tb_usuario") 
 public class Usuario {
 	
 	
 	 
 	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) long id;
 	
-	@NotBlank
+	@NotBlank (message = "O nome é obrigatório!")
 	@Size (min = 2, max=100)
 	private String nome; 
 	
 	@Email
-	@NotBlank
+	@NotBlank (message = "O usuário é obrigatório!")
 	@Size (min = 5, max=100)
 	private String usuario;
 	
-	@NotBlank
-	@Size (min = 5, max=100)
+	@NotBlank (message = "A senha é obrigatório!")
+	@Size (min = 5, max=100, message = "A Senha deve ter no mínimo 5 caracteres")
 	private String senha;
 	
 	
-	@OneToMany (mappedBy = "usuario", cascade = CascadeType.ALL)
+	@OneToMany (mappedBy = "usuario", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties ("usuario")
 	private List <Postagem> postagem;
 	
@@ -52,38 +52,57 @@ public class Usuario {
 
 	public Usuario() {}
 
-	
+
 	public long getId() {
 		return id;
 	}
+
 
 	public void setId(long id) {
 		this.id = id;
 	}
 
+
 	public String getNome() {
 		return nome;
 	}
+
 
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
 
+
 	public String getUsuario() {
 		return usuario;
 	}
+
 
 	public void setUsuario(String usuario) {
 		this.usuario = usuario;
 	}
 
+
 	public String getSenha() {
 		return senha;
 	}
 
+
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
+
+
+	public List<Postagem> getPostagem() {
+		return postagem;
+	}
+
+
+	public void setPostagem(List<Postagem> postagem) {
+		this.postagem = postagem;
+	}
+
 	
+
 	
 }
